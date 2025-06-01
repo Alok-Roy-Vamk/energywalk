@@ -1,0 +1,6 @@
+@EnergyWalk_HostAddress = http://localhost:5274
+
+GET {{EnergyWalk_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
