@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EnergyWalk.Common\EnergyWalk.Common.csproj" />
+    <ProjectReference Include="..\EnergyWalk.DataAccess\EnergyWalk.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

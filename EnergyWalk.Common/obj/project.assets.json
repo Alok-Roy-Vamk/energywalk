@@ -8,23 +8,23 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\OMISTAJA\\.nuget\\packages\\": {},
+    "C:\\Users\\user\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Alok bhai\\EnergyWalk\\EnergyWalk.Common\\EnergyWalk.Common.csproj",
+      "projectUniqueName": "D:\\energywalk\\EnergyWalk.Common\\EnergyWalk.Common.csproj",
       "projectName": "EnergyWalk.Common",
-      "projectPath": "D:\\Alok bhai\\EnergyWalk\\EnergyWalk.Common\\EnergyWalk.Common.csproj",
-      "packagesPath": "C:\\Users\\OMISTAJA\\.nuget\\packages\\",
-      "outputPath": "D:\\Alok bhai\\EnergyWalk\\EnergyWalk.Common\\obj\\",
+      "projectPath": "D:\\energywalk\\EnergyWalk.Common\\EnergyWalk.Common.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "D:\\energywalk\\EnergyWalk.Common\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\OMISTAJA\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],

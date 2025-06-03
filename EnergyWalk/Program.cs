@@ -1,69 +1,44 @@
-using System.Net;
-using System.Text.Json;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.OpenApi.Models;
-
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container  
-ConfigureServices(builder.Services);
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure middleware  
-ConfigureMiddleware(app);
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-// Map endpoints  
-app.MapControllers();
+app.UseHttpsRedirection();
+
+var summaries = new[]
+{
+    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+};
+
+app.MapGet("/weatherforecast", () =>
+{
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+        new WeatherForecast
+        (
+            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            Random.Shared.Next(-20, 55),
+            summaries[Random.Shared.Next(summaries.Length)]
+        ))
+        .ToArray();
+    return forecast;
+})
+.WithName("GetWeatherForecast")
+.WithOpenApi();
 
 app.Run();
 
-// Method to configure services  
-void ConfigureServices(IServiceCollection services)
+internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
-    services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "Energy Management API",
-            Version = "v1",                       
-        });
-    });
-   
-    services.AddControllers();
-
-    // Add Authentication   todo: if needed
-
-    // Add Authorization    todo: if needed
-}
-
-// Method to configure middleware  
-void ConfigureMiddleware(WebApplication app)
-{
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-    else
-    {
-        app.UseExceptionHandler(errorApp =>
-        {
-            errorApp.Run(async context =>
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                context.Response.ContentType = "application/json";
-
-                var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
-                var errorResponse = new
-                {
-                   // Message = AppConstants.Message.UnexpectedError,
-                    Detail = exceptionHandlerPathFeature?.Error.Message
-                };
-                await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
-            });
-        });
-    }
+    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
