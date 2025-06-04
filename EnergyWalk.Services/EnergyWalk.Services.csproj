@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EnergyWalk.Common\EnergyWalk.Common.csproj" />
     <ProjectReference Include="..\EnergyWalk.DataAccess\EnergyWalk.DataAccess.csproj" />
   </ItemGroup>

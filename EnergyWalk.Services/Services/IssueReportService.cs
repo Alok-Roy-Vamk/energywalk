@@ -4,71 +4,97 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EnergyWalk.Common.DTO;
+using EnergyWalk.Common.OperationDTO;
 using EnergyWalk.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace EnergyWalk.Services.Services
 {
     public class IssueReportService : IIssueReportService
     {
-            private readonly EnergyWalkDBContext _energyWalkDBContext;
+        private readonly EnergyWalkDBContext _energyWalkDBContext;
 
-            public IssueReportService(EnergyWalkDBContext energyWalkDBContext)
+        public IssueReportService(EnergyWalkDBContext energyWalkDBContext)
+        {
+            _energyWalkDBContext = energyWalkDBContext ?? throw new ArgumentNullException(nameof(energyWalkDBContext));
+        }
+
+        public async Task<ResponseMessage> CreateAsync(RequestMessage requestMessage)
+        {
+            IssueReport IssueReport = JsonConvert.DeserializeObject<IssueReport>(requestMessage.RequestObj.ToString());
+            ResponseMessage responseMessage = new ResponseMessage();
+            if (IssueReport == null) throw new ArgumentNullException(nameof(IssueReport));
+            _energyWalkDBContext.IssueReports.Add(IssueReport);
+            await _energyWalkDBContext.SaveChangesAsync();
+            responseMessage.ResponseObj = IssueReport;
+            return responseMessage;
+        }
+
+        public async Task<ResponseMessage> DeleteAsync(int IssueReportID)
+        {
+            ResponseMessage responseMessage = new ResponseMessage();
+
+            var IssueReport = await _energyWalkDBContext.IssueReports.FirstOrDefaultAsync(u => u.IssueReportID == IssueReportID);
+            if (IssueReport == null)
             {
-                _energyWalkDBContext = energyWalkDBContext ?? throw new ArgumentNullException(nameof(energyWalkDBContext));
+                responseMessage.StatusCode = 404; // Not Found
+                responseMessage.Message = "IssueReport not found.";
+                return responseMessage;
             }
 
-            public async Task<IssueReport> CreateAsync(IssueReport user)
+            _energyWalkDBContext.IssueReports.Remove(IssueReport);
+            await _energyWalkDBContext.SaveChangesAsync();
+
+            responseMessage.ResponseObj = IssueReport;
+            responseMessage.StatusCode = 200; // OK
+            return responseMessage;
+        }
+
+        public async Task<ResponseMessage> GetAllAsync()
+        {
+
+            ResponseMessage responseMessage = new ResponseMessage();
+            responseMessage.ResponseObj = await _energyWalkDBContext.IssueReports.ToListAsync();
+            return responseMessage;
+        }
+
+        public async Task<ResponseMessage?> GetByIdAsync(RequestMessage requestMessage)
+        {
+            int IssueReportID = JsonConvert.DeserializeObject<int>(requestMessage.RequestObj.ToString());
+            ResponseMessage responseMessage = new ResponseMessage();
+            responseMessage.ResponseObj = await _energyWalkDBContext.IssueReports.FirstOrDefaultAsync(u => u.IssueReportID == IssueReportID);
+            return responseMessage;
+        }
+
+        public async Task<ResponseMessage> UpdateAsync(RequestMessage requestMessage)
+        {
+
+            IssueReport IssueReport = JsonConvert.DeserializeObject<IssueReport>(requestMessage.RequestObj.ToString());
+            ResponseMessage responseMessage = new ResponseMessage();
+            if (IssueReport == null) throw new ArgumentNullException(nameof(IssueReport));
+            var existingIssueReport = await _energyWalkDBContext.IssueReports
+                .FirstOrDefaultAsync(u => u.IssueReportID == IssueReport.IssueReportID);
+            if (existingIssueReport == null)
             {
-                if (user == null) throw new ArgumentNullException(nameof(user));
-                _energyWalkDBContext.IssueReports.Add(user);
-                await _energyWalkDBContext.SaveChangesAsync();
-                return user;
+                responseMessage.StatusCode = 404; // Not Found
+                responseMessage.Message = "IssueReport not found.";
+                return responseMessage;
             }
 
-            public async Task<bool> DeleteAsync(int IssueReportID)
-            {
-                var user = await _energyWalkDBContext.IssueReports
-                    .FirstOrDefaultAsync(u => u.IssueReportID == IssueReportID);
-                if (user == null)
-                    return false;
-
-                _energyWalkDBContext.IssueReports.Remove(user);
-                await _energyWalkDBContext.SaveChangesAsync();
-                return true;
-            }
-
-            public async Task<IEnumerable<IssueReport>> GetAllAsync()
-            {
-                return await _energyWalkDBContext.IssueReports.ToListAsync();
-            }
-
-            public async Task<IssueReport?> GetByIdAsync(int IssueReportID)
-            {
-                return await _energyWalkDBContext.IssueReports
-                    .FirstOrDefaultAsync(u => u.IssueReportID == IssueReportID);
-            }
-
-            public async Task<IssueReport> UpdateAsync(IssueReport user)
-            {
-                if (user == null) throw new ArgumentNullException(nameof(user));
-                var existingUser = await _energyWalkDBContext.IssueReports
-                    .FirstOrDefaultAsync(u => u.IssueReportID == user.IssueReportID);
-                if (existingUser == null)
-                    throw new InvalidOperationException("User not found.");
-
-                await _energyWalkDBContext.SaveChangesAsync();
-                return existingUser;
-            }
+            await _energyWalkDBContext.SaveChangesAsync();
+            responseMessage.ResponseObj = IssueReport;
+            return responseMessage;
+        }
     }
 
     public interface IIssueReportService
     {
-        Task<IssueReport> CreateAsync(IssueReport user);
-        Task<IssueReport?> GetByIdAsync(int id);
-        Task<IEnumerable<IssueReport>> GetAllAsync();
-        Task<IssueReport> UpdateAsync(IssueReport user);
-        Task<bool> DeleteAsync(int id);
+        Task<ResponseMessage> CreateAsync(RequestMessage requestMessage);
+        Task<ResponseMessage> GetByIdAsync(RequestMessage requestMessage);
+        Task<ResponseMessage> GetAllAsync();
+        Task<ResponseMessage> UpdateAsync(RequestMessage requestMessage);
+        Task<ResponseMessage> DeleteAsync(int id);
     }
 
 
