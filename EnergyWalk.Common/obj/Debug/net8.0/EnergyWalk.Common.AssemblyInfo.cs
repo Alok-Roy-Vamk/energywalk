@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnergyWalk.Common")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+472021c36095971a7ddaeebdb7feecbcb87831d9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+00f00255f102a1ebd228413cb4f44ce220ad625d")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnergyWalk.Common")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnergyWalk.Common")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

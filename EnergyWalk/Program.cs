@@ -1,9 +1,29 @@
+
+
+using EnergyWalk.DataAccess;
+using EnergyWalk.Services.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddControllers();
+
+builder.Services.AddDbContext<EnergyWalkDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("EnergyWalkDB"))); 
+
+// Register ICompanyService with dependency injection
+builder.Services.AddScoped<ICompanyService, CompanyService>();
+builder.Services.AddScoped<IConsumptionService, ConsumptionService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IEmployeeSuggestionService, EmployeeSuggestionService>();
+builder.Services.AddScoped<IIssueReportService, IssueReportService>();
+builder.Services.AddScoped<ISystemUserService, SystemUserService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
 
 var app = builder.Build();
 
